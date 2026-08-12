@@ -1,0 +1,55 @@
+{
+ "columns": [
+  "JIT (L1+L2)",
+  "JIT (+L3)",
+  "Random-100+DBSCAN",
+  "ConceptGraphs",
+  "GOAT"
+ ],
+ "rows": [
+  {
+   "dataset": "ScanNet",
+   "scenes": 141,
+   "vals": [
+    79.1,
+    81.3,
+    72.8,
+    70.3,
+    71.7
+   ]
+  },
+  {
+   "dataset": "HM3D",
+   "scenes": 36,
+   "vals": [
+    78.4,
+    null,
+    67.2,
+    6.1,
+    55.4
+   ]
+  },
+  {
+   "dataset": "ARKitScenes",
+   "scenes": 12,
+   "vals": [
+    71.5,
+    73.6,
+    71.7,
+    66.9,
+    55.8
+   ]
+  },
+  {
+   "dataset": "Replica",
+   "scenes": 8,
+   "vals": [
+    38.3,
+    25.7,
+    35.4,
+    26.0,
+    31.5
+   ]
+  }
+ ]
+}

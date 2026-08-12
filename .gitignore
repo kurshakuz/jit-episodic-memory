@@ -1,0 +1,83 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Outputs (large files - generated during evaluation)
+outputs/
+data/
+paper/
+scripts/
+
+# ScanNet + experiments: publish the CODE (*.py / *.sh), but never the downloaded
+# raw scans, extracted frames, JIT-format streams, or per-scene results.
+scannet/data/
+scannet/extracted/
+scannet/jit_format/
+scannet/jit_format_500/
+scannet/results/
+
+# Model checkpoints / weights (download separately)
+models/
+*.bin
+*.safetensors
+*.pth
+*.ckpt
+*.pt
+*.pkl
+*.pkl.gz
+.cache/
+
+# Vendored / external repos
+lang-seg/
+third_party/
+
+# Scratch / debug files
+patch*.py
+test_clip*.py
+test_projection.py
+run.sh
+_tmp*
+run_log*.txt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary
+*.tmp
+*.log
+*.bak
+
+*.pdf
+*.png
+
+*.json
+*.csv
+*.txt
+*.md
+
+audit_scripts/
+
+# --- Project webpage (docs/): keep ALL page assets, overriding the global
+#     *.png / *.json / *.pdf / *.md ignores above so GitHub Pages has everything ---
+!docs/**

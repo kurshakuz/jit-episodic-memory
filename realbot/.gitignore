@@ -1,0 +1,9 @@
+# Raw private robot recordings (MCAP bags) — never commit.
+incoming/
+# Derived from private robot recordings — regenerate with the scripts, do not commit.
+trace/
+trace_*/
+_out/
+__pycache__/
+*.png
+static_tf.json     # regenerate with: python realbot/dump_static_tf.py <chunk0.mcap>

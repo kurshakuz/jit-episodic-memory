@@ -1,0 +1,51 @@
+{
+ "note": "ScanNet v2, 141 scenes, 457 queries. Loc@1m macro. Storage = each method's own built artifact (shared RGB-D keyframes excluded from all rows).",
+ "methods": [
+  {
+   "name": "JIT (L1+L2)",
+   "loc_1m": 79.1,
+   "build_s": 3.1,
+   "storage_mb": 1.0,
+   "query_ms": 2500,
+   "lazy": true,
+   "retained_mb": 375
+  },
+  {
+   "name": "JIT (+L3)",
+   "loc_1m": 81.3,
+   "build_s": 3.1,
+   "storage_mb": 1.0,
+   "query_ms": 2500,
+   "lazy": true,
+   "retained_mb": 375
+  },
+  {
+   "name": "ConceptFusion",
+   "loc_1m": 74.1,
+   "build_s": 286,
+   "storage_mb": 250,
+   "query_ms": 25
+  },
+  {
+   "name": "VLMaps",
+   "loc_1m": 71.8,
+   "build_s": 47,
+   "storage_mb": 490,
+   "query_ms": 48
+  },
+  {
+   "name": "GOAT",
+   "loc_1m": 71.7,
+   "build_s": 27,
+   "storage_mb": 58,
+   "query_ms": 1
+  },
+  {
+   "name": "ConceptGraphs",
+   "loc_1m": 70.3,
+   "build_s": 2160,
+   "storage_mb": 7,
+   "query_ms": 10
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+{
+ "jit": {
+  "build_s": 3.1,
+  "query_s": 2.5
+ },
+ "eager": [
+  {
+   "name": "ConceptGraphs",
+   "build_s": 2160,
+   "query_s": 0.01,
+   "crossover": 860
+  },
+  {
+   "name": "ConceptFusion",
+   "build_s": 286,
+   "query_s": 0.025,
+   "crossover": 114
+  },
+  {
+   "name": "VLMaps",
+   "build_s": 47,
+   "query_s": 0.048,
+   "crossover": 18
+  }
+ ],
+ "note": "Queries per scene at which JIT's cumulative wall-clock cost overtakes an eager map. Cumulative energy crossover is far later (CG ~18k-28k queries)."
+}

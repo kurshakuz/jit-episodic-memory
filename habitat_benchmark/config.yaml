@@ -1,0 +1,52 @@
+# Habitat Benchmark Configuration
+# ================================
+
+# Episode Generation
+episodes:
+  per_scene: 5
+  min_geodesic_distance: 1.0
+  max_geodesic_distance: 30.0
+  seed: 42
+
+# Target object categories
+target_categories:
+  - chair
+  - table
+  - sofa
+  - bed
+  - toilet
+  - tv
+  - sink
+  - bathtub
+  - refrigerator
+  - lamp
+
+# Evaluation thresholds
+evaluation:
+  success_thresholds: [0.5, 1.0, 2.0, 3.0]
+  default_threshold: 1.0
+  use_habitat_sim: false
+
+# Baseline configurations
+baselines:
+  pose_only:
+    k: 1  # Top-k CLIP results
+  
+  l1_owl_depth:
+    k: 10
+    detection_threshold: 0.1
+  
+  brute_force:
+    detection_threshold: 0.1
+    max_frames: 200
+  
+  jit_cascade:
+    k: 20
+    dbscan_eps: 0.5
+    detection_threshold: 0.1
+
+# Paths (relative to project root)
+paths:
+  data_root: outputs/multi_scene_eval
+  output_dir: outputs/habitat_benchmark
+  episodes_file: outputs/habitat_benchmark/episodes.json

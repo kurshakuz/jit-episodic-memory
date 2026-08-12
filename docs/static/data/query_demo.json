@@ -1,0 +1,117 @@
+{
+ "scene": "GLAQ4DNUx5U",
+ "queries": [
+  {
+   "query": "bed",
+   "result": {
+    "detected": true,
+    "x": -0.06,
+    "y": 1.83,
+    "z": 3.66,
+    "error_m": 0.48,
+    "n_detected": 25,
+    "latency_ms": 2500
+   },
+   "frames": [
+    {
+     "src": "static/images/demo/demo_bed_0.jpg",
+     "score": 0.27
+    },
+    {
+     "src": "static/images/demo/demo_bed_1.jpg",
+     "score": 0.26
+    },
+    {
+     "src": "static/images/demo/demo_bed_2.jpg",
+     "score": 0.26
+    },
+    {
+     "src": "static/images/demo/demo_bed_3.jpg",
+     "score": 0.26
+    }
+   ]
+  },
+  {
+   "query": "sink",
+   "result": {
+    "detected": true,
+    "x": -1.23,
+    "y": 1.89,
+    "z": -0.85,
+    "error_m": 0.48,
+    "n_detected": 17,
+    "latency_ms": 2500
+   },
+   "frames": [
+    {
+     "src": "static/images/demo/demo_sink_0.jpg",
+     "score": 0.28
+    },
+    {
+     "src": "static/images/demo/demo_sink_1.jpg",
+     "score": 0.26
+    },
+    {
+     "src": "static/images/demo/demo_sink_2.jpg",
+     "score": 0.2
+    },
+    {
+     "src": "static/images/demo/demo_sink_3.jpg",
+     "score": 0.2
+    }
+   ]
+  },
+  {
+   "query": "mirror",
+   "result": {
+    "detected": true,
+    "x": -1.51,
+    "y": 2.63,
+    "z": -1.19,
+    "error_m": 0.14,
+    "n_detected": 7,
+    "latency_ms": 2500
+   },
+   "frames": [
+    {
+     "src": "static/images/demo/demo_mirror_0.jpg",
+     "score": 0.17
+    },
+    {
+     "src": "static/images/demo/demo_mirror_1.jpg",
+     "score": 0.16
+    },
+    {
+     "src": "static/images/demo/demo_mirror_2.jpg",
+     "score": 0.16
+    },
+    {
+     "src": "static/images/demo/demo_mirror_3.jpg",
+     "score": 0.15
+    }
+   ]
+  },
+  {
+   "query": "couch",
+   "result": {
+    "detected": true,
+    "x": -9.48,
+    "y": -1.08,
+    "z": 4.86,
+    "error_m": 0.34,
+    "n_detected": 2,
+    "latency_ms": 2500
+   },
+   "frames": [
+    {
+     "src": "static/images/demo/demo_couch_0.jpg",
+     "score": 0.16
+    },
+    {
+     "src": "static/images/demo/demo_couch_1.jpg",
+     "score": 0.14
+    }
+   ]
+  }
+ ]
+}

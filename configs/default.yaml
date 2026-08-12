@@ -1,0 +1,87 @@
+# JIT Episodic Memory Configuration
+# =================================
+# For paths, use environment variables or relative paths
+
+# Paths - Set HM3D_DATA environment variable or modify these
+paths:
+  # Base path for HM3D dataset (set HM3D_DATA env var or modify here)
+  # hm3d_base: "${HM3D_DATA}"  # e.g., /path/to/scene_datasets/hm3d
+  output_dir: "outputs"
+
+# Scene settings
+scene:
+  # Default HM3D example scene
+  scene_id: "GLAQ4DNUx5U"
+  scene_path: "example/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb"
+  dataset_config: "example/hm3d_annotated_example_basis.scene_dataset_config.json"
+
+# Sensor settings
+simulator:
+  sensors:
+    rgb:
+      width: 640
+      height: 480
+      hfov: 90  # horizontal field of view in degrees
+    depth:
+      width: 640
+      height: 480
+      hfov: 90
+  sensor_height: 1.5  # meters (camera height)
+
+# Agent settings
+agent:
+  move_forward: 0.25  # meters per step
+  turn_angle: 10  # degrees per turn
+
+# Ingestion settings (Phase 2)
+ingestion:
+  # Keyframe selection via Semantic Entropy
+  semantic_entropy_threshold: 0.15  # tau - save frame if cosine similarity change > tau
+  min_distance_threshold: 0.1  # meters - minimum movement to consider saving
+  min_rotation_threshold: 10.0  # degrees - minimum rotation to consider saving
+  
+  # CLIP settings
+  clip_model: "ViT-B-32-quickgelu"
+  clip_pretrained: "laion400m_e32"
+  
+  # Storage
+  image_quality: 85  # JPEG quality
+  max_frames_per_session: 10000
+
+# Retrieval settings (Phase 3)
+retrieval:
+  # Level 1: Semantic Filter
+  l1_top_k: 100  # Number of candidates to retrieve from FAISS
+  
+  # Level 2: Geometric Clustering
+  dbscan_eps: 1.0  # meters - maximum distance between points in cluster
+  dbscan_min_samples: 1  # minimum points to form a cluster
+  top_clusters: 10  # max clusters from L2
+  
+  # Level 3: Visual Verification
+  l3_max_verify: 5  # Number of top clusters to verify
+  owl_vit_model: "google/owlvit-base-patch32"
+  verification_threshold: 0.1  # confidence threshold for OWL-ViT
+
+# Evaluation settings (Phase 4)
+evaluation:
+  visibility_threshold: 5.0  # meters - camera within this = object visible
+  localization_thresholds: [0.5, 1.0, 2.0, 3.0]  # meters
+  
+  # Test queries for evaluation
+  test_queries:
+    - toilet
+    - chair
+    - table
+    - bed
+    - couch
+    - sink
+    - lamp
+    - mirror
+    - cabinet
+    - shelf
+
+# Logging
+logging:
+  level: "INFO"
+  save_debug_images: false

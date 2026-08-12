@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Just-in-Time Episodic Memory for Mobile Robots</title>
+<meta name="description" content="A robot stores RGB-D keyframes behind a CLIP–FAISS index and defers detection, depth back-projection, and clustering to query time, matching eager 3D maps at a fraction of the build cost.">
+<meta property="og:title" content="Spatially-Grounded Just-in-Time Episodic Memory for Mobile Robots">
+<meta property="og:description" content="Deferred query-time geometry replaces a pre-built 3D semantic map with no loss of localization accuracy and orders of magnitude less pre-computation.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+<link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+<!-- ===== nav ===== -->
+<nav class="top"><div class="wrap">
+  <a class="brand" href="#top">JIT&nbsp;Episodic&nbsp;Memory</a>
+  <div class="links">
+    <a href="#method">Method</a>
+    <a href="#video">Video</a>
+    <a href="#realrobot">Real robot</a>
+    <a href="#demo">Demo</a>
+    <a href="#results">Results</a>
+    <a href="#bibtex">BibTeX</a>
+    <a class="cta" href="https://github.com/kurshakuz/jit-episodic-memory" target="_blank" rel="noopener">Code</a>
+  </div>
+</div></nav>
+
+<!-- ===== hero ===== -->
+<header class="hero" id="top"><div class="wrap">
+  <h1>Spatially-Grounded Just-in-Time Episodic Memory for Mobile Robots</h1>
+  <p class="sub">A robot stores RGB-D keyframes behind a lightweight CLIP–FAISS index and
+    defers detection, depth back-projection, and clustering to <em>query time</em>,
+    matching eager 3D maps at a fraction of the build cost.</p>
+  <div class="authors">Shyngyskhan Abilkassov, Almas Shintemirov</div>
+  <div class="affil"><a href="https://nu.edu.kz" target="_blank" rel="noopener">Nazarbayev University</a></div>
+  <div class="btnrow">
+    <a class="btn solid" href="static/jit_paper.pdf" target="_blank" rel="noopener">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm8 1.5V8h4.5L14 3.5zM8 12h8v1.6H8V12zm0 3.4h8V17H8v-1.6zM8 8.6h3v1.6H8V8.6z"/></svg>
+      Paper (PDF)</a>
+    <a class="btn" href="https://github.com/kurshakuz/jit-episodic-memory" target="_blank" rel="noopener">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.26-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.39.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
+      Code</a>
+    <a class="btn" href="#video">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5z"/></svg>
+      Video</a>
+    <a class="btn" href="#bibtex">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M7 7h5v6a4 4 0 0 1-4 4v-2a2 2 0 0 0 2-2H7V7zm8 0h5v6a4 4 0 0 1-4 4v-2a2 2 0 0 0 2-2h-3V7z"/></svg>
+      BibTeX</a>
+  </div>
+</div></header>
+
+<!-- ===== method ===== -->
+<section id="method"><div class="wrap">
+  <div class="eyebrow">Method</div>
+  <h2 class="title">A three-level just-in-time cascade</h2>
+  <p class="lead">Nothing about an object's geometry is computed until a text query arrives.
+    Click a stage to see what runs and what it costs.</p>
+  <div class="cascade">
+    <div class="stages" id="stages">
+      <div class="stage" data-stage="0" style="--stagecol:#5457e6">
+        <div class="num">1</div>
+        <div><h4>Semantic retrieval</h4>
+          <p>CLIP text embedding → FAISS search returns the top <em>k</em>=100 keyframes.</p>
+          <div class="cost">sub-millisecond · fixes the detection budget</div></div>
+      </div>
+      <div class="stage" data-stage="1" style="--stagecol:#12b3a6">
+        <div class="num">2</div>
+        <div><h4>Detect · project · cluster</h4>
+          <p>OWL-ViT on the <em>k</em> frames → depth back-projection → DBSCAN → ranked 3D candidates.</p>
+          <div class="cost">≈2.5 s · detector-bound, independent of memory size</div></div>
+      </div>
+      <div class="stage" data-stage="2" style="--stagecol:#f0873a">
+        <div class="num">3</div>
+        <div><h4>Verification <span style="font-weight:500;color:var(--faint)">(optional)</span></h4>
+          <p>Re-detect in the top-5 clusters and refine centroids; auto-gated by capture density.</p>
+          <div class="cost">dense captures only (ScanNet on, HM3D off)</div></div>
+      </div>
+    </div>
+    <div class="detail" id="detail"><!-- filled by JS --></div>
+  </div>
+
+  <div style="margin-top:40px" class="gallery">
+    <figure class="bordered"><img src="static/images/architecture.png" alt="JIT architecture: lazy ingestion into keyframes + CLIP–FAISS index, then a query-time three-level cascade returning ranked 3D locations.">
+      <figcaption>Phase&nbsp;1 lazily ingests RGB-D+pose into keyframes and a CLIP–FAISS index
+        (O(1) insert). Phase&nbsp;2 answers a query with the three-level cascade, returning a ranked list of 3D locations.</figcaption></figure>
+  </div>
+</div></section>
+
+<!-- ===== video ===== -->
+<section id="video"><div class="wrap">
+  <div class="eyebrow">In the simulator</div>
+  <h2 class="title">Explore, then localize at query time</h2>
+  <p class="lead">An agent explores an HM3D scene, storing keyframes into its episodic memory.
+    A text query then triggers retrieval, detection, and 3D localization. No map was ever built.</p>
+  <div class="vidgrid">
+    <figure><div class="videowrap" data-vid>
+      <video src="static/videos/rollout.mp4" poster="static/videos/rollout_poster.jpg"
+        autoplay muted loop playsinline preload="none"></video></div>
+      <figcaption>Exploration in HM3D: the robot builds its keyframe memory.</figcaption></figure>
+    <figure><div class="videowrap" data-vid>
+      <video src="static/videos/query.mp4" poster="static/videos/query_poster.jpg"
+        autoplay muted loop playsinline preload="none"></video></div>
+      <figcaption>Query time: retrieved frames → detection → ranked 3D location.</figcaption></figure>
+  </div>
+</div></section>
+
+<!-- ===== real robot ===== -->
+<section id="realrobot"><div class="wrap">
+  <div class="eyebrow">On a real robot</div>
+  <h2 class="title">The same pipeline on a real robot</h2>
+  <p class="lead">The method is validated in simulation, but nothing in it is simulator-specific.
+    We ran the identical CLIP–FAISS → OWL-ViT → depth back-projection pipeline on a walking
+    quadruped with a ZED stereo camera across two real deployments — a 919&nbsp;m outdoor campus
+    loop and, separately, an indoor lab building — with no fine-tuning or calibration to either.</p>
+
+  <div class="rr-hero">
+    <figure><div class="videowrap" data-vid>
+      <video src="static/videos/realbot_rollout.mp4" poster="static/videos/realbot_rollout.jpg"
+        autoplay muted loop playsinline preload="none"></video></div>
+      <figcaption>Real quadruped walk: keyframes accumulate into episodic memory (top-down map),
+        and the <b>“car”</b> query is localized and boxed live on the egocentric view.</figcaption></figure>
+    <div class="cards">
+      <div class="card"><div class="big">0.21&nbsp;m</div><div class="lbl">mean, LiDAR-verified</div>
+        <p>Nine solid objects, from vehicles to a manhole cover, all within 0.5&nbsp;m of onboard RoboSense LiDAR: 100% Loc@0.5&nbsp;m.</p></div>
+      <div class="card"><div class="big">919&nbsp;m</div><div class="lbl">one campus loop</div>
+        <p>Six chunks form a single drift-free traverse; every query-localized object lands on one global map.</p></div>
+      <div class="card"><div class="big">0×</div><div class="lbl">retraining</div>
+        <p>The simulation pipeline run as-is: no fine-tuning, no calibration to the robot or the scene.</p></div>
+    </div>
+  </div>
+
+  <div class="rr-sub">Open-vocabulary queries, two environments</div>
+  <p class="rr-sub-lead">Free-form text queries localize objects the method never saw in training,
+    outdoors and indoors — each triangulated to one 3D point across many views and verified against
+    LiDAR. The indoor walk was recorded in a different (compressed) RGB-D encoding and localized from
+    odometry alone, in the close-range regime of the ScanNet/HM3D benchmarks.</p>
+  <figure class="bordered">
+    <img src="static/images/realbot/hero_two_env.png" alt="Open-vocabulary objects localized outdoors and indoors, LiDAR-verified">
+    <figcaption>Open-vocabulary objects boxed on raw ZED footage and localized to LiDAR ground truth,
+      outdoors (bicycle, bench) and indoors (sofa, bulletin board).</figcaption>
+  </figure>
+  <div class="cards">
+    <div class="card"><div class="big">0.09&nbsp;m</div><div class="lbl">indoor mean, LiDAR-verified</div>
+      <p>14 solid objects across a lab building, all within 0.5&nbsp;m of RoboSense LiDAR (100% Loc@0.5&nbsp;m) — tighter than outdoors, at the 1–4&nbsp;m close range where ZED stereo is sharp.</p></div>
+    <div class="card"><div class="big">0.06&nbsp;m</div><div class="lbl">decode ✓ vs LiDAR</div>
+      <p>RGB and depth arrive <em>compressed</em> and no prior map runs; the method is unchanged (only a decoder for the compressed streams added), the decoded depth agreeing with LiDAR to 0.06&nbsp;m.</p></div>
+    <div class="card"><div class="big">k&nbsp;=&nbsp;2</div><div class="lbl">headline findings reproduce</div>
+      <p>CLIP localizes a sparse object at k&nbsp;=&nbsp;2 where random selection needs ~25× the budget; multi-view clustering tightens each detection 0.14&nbsp;m → 0.04&nbsp;m; synonyms (radiator&nbsp;≡&nbsp;heater&nbsp;≡&nbsp;wall&nbsp;heater) agree within 0.11&nbsp;m.</p></div>
+  </div>
+
+  <p class="caveat"><b>Honest notes.</b> Open-vocabulary grounding depends on the query naming something
+    that is actually present: colour resolves a white car from a gray SUV in the same parked row, but a
+    query for an attribute that is not there (a “blue car”, when none is blue) returns the nearest match,
+    and a multi-instance query (“door”) can lock onto a different instance. A sparse LiDAR beam also shoots
+    <em>through</em> a thin object like the bicycle to the wall behind it, so LiDAR is not a fair ground
+    truth there; where the object is solid, LiDAR confirms the localization (table below).</p>
+
+  <div class="rr-sub">Localization accuracy, LiDAR-verified</div>
+  <p class="rr-sub-lead">We score JIT's ZED-depth localization against the independent RoboSense LiDAR,
+    projecting its points into the camera at each detection to read the true range. Across nine solid objects
+    spanning vehicles, furniture, a manhole cover, a stop sign and an overpass column, every one lands within
+    0.5&nbsp;m: <b>100% Loc@0.5&nbsp;m</b> on real hardware, mean 0.21&nbsp;m.</p>
+  <div class="rr-valid">
+    <table class="acctable">
+      <thead><tr><th>object</th><th>views</th><th>error&nbsp;(xy)</th></tr></thead>
+      <tbody>
+        <tr><td>white car</td><td>46</td><td>0.06&nbsp;m</td></tr>
+        <tr><td>gray suv</td><td>26</td><td>0.09&nbsp;m</td></tr>
+        <tr><td>manhole cover</td><td>5</td><td>0.11&nbsp;m</td></tr>
+        <tr><td>bench</td><td>12</td><td>0.12&nbsp;m</td></tr>
+        <tr><td>car</td><td>61</td><td>0.22&nbsp;m</td></tr>
+        <tr><td>tree</td><td>9</td><td>0.29&nbsp;m</td></tr>
+        <tr><td>building</td><td>9</td><td>0.29&nbsp;m</td></tr>
+        <tr><td>stop sign</td><td>45</td><td>0.35&nbsp;m</td></tr>
+        <tr><td>column</td><td>16</td><td>0.40&nbsp;m</td></tr>
+      </tbody>
+      <tfoot><tr><td>mean</td><td>–</td><td>0.21&nbsp;m</td></tr></tfoot>
+    </table>
+    <figure><img src="static/images/realbot/global_map.png" alt="all localized objects on the 919 m drift-free map" loading="lazy">
+      <figcaption>All 14 query-localized objects on the single 919&nbsp;m drift-free map. The traverse closes back
+        at its start with no drift jump: one global episodic memory the robot can query anywhere along the walk.</figcaption></figure>
+  </div>
+</div></section>
+
+<!-- ===== interactive query demo ===== -->
+<section id="demo"><div class="wrap">
+  <div class="eyebrow">Interactive</div>
+  <h2 class="title">Try a query</h2>
+  <p class="lead">Pick an object. From a stored HM3D memory, JIT retrieves frames, detects the
+    object (OWL-ViT box shown), and back-projects it to a 3D location, with the real error to ground truth.</p>
+  <div class="demo">
+    <div class="panel">
+      <label for="q">Query the episodic memory</label>
+      <select id="q"></select>
+      <div class="result" id="qresult"></div>
+    </div>
+    <div class="panel">
+      <div style="font-weight:600;font-size:14px;color:var(--muted);margin-bottom:10px">Keyframes where JIT detects it</div>
+      <div class="frames" id="qframes"></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ===== results ===== -->
+<section id="results"><div class="wrap">
+  <div class="eyebrow">Results</div>
+  <h2 class="title">Localization accuracy and cost</h2>
+  <p class="lead">Every chart is drawn from the released result artifacts; hover for values.</p>
+
+  <div class="chartgrid">
+    <div class="chartcard"><h3>Accuracy vs detector budget</h3>
+      <p class="sub">HM3D · Loc@1&nbsp;m as the retrieval budget <em>k</em> grows. JIT reaches random's best with ~4× fewer calls.</p>
+      <div class="chartbox"><canvas id="chartBudget"></canvas></div></div>
+    <div class="chartcard"><h3>Latency stays flat as memory grows</h3>
+      <p class="sub">Query latency vs frames stored. Detection is capped at <em>k</em>=100; brute force scales with the memory.</p>
+      <div class="chartbox"><canvas id="chartScale"></canvas></div></div>
+    <div class="chartcard"><h3>One-time build cost</h3>
+      <p class="sub">ScanNet · seconds to prepare a scene before any query (log scale).</p>
+      <div class="chartbox"><canvas id="chartBuild"></canvas></div></div>
+    <div class="chartcard"><h3>One configuration, four datasets</h3>
+      <p class="sub">Loc@1&nbsp;m with a single geometric hyperparameter set.</p>
+      <div class="chartbox"><canvas id="chartCross"></canvas></div></div>
+  </div>
+
+  <div class="chartcard" style="margin-top:26px"><h3>When deferring is worthwhile</h3>
+    <p class="sub">Cumulative wall-clock time vs number of queries per scene. JIT starts with a negligible build cost;
+      it overtakes an eager map after the crossover (drag is one-time build; slope is per-query cost).</p>
+    <div class="chartbox" style="height:340px"><canvas id="chartCrossover"></canvas></div></div>
+
+  <!-- ScanNet headline table -->
+  <h3 style="margin:44px 0 4px;font-size:20px">ScanNet&nbsp;v2: accuracy and cost</h3>
+  <p class="sub" style="color:var(--muted);margin:0 0 16px">141 scenes, 457 queries · macro Loc@1&nbsp;m.</p>
+  <div class="tablewrap"><table class="data">
+    <thead><tr><th>Method</th><th>Loc@1&nbsp;m</th><th>Build</th><th>Storage</th><th>Query</th></tr></thead>
+    <tbody>
+      <tr class="ours"><td>JIT (L1+L2)</td><td>79.1</td><td class="best">3.1 s</td><td class="best">1.0 MB</td><td>2.5 s</td></tr>
+      <tr class="ours"><td>JIT (+L3)</td><td class="best">81.3</td><td class="best">3.1 s</td><td class="best">1.0 MB</td><td>2.5 s</td></tr>
+      <tr><td>ConceptFusion</td><td>74.1</td><td>286 s</td><td>~250 MB</td><td>25 ms</td></tr>
+      <tr><td>VLMaps</td><td>71.8</td><td>47 s</td><td>490 MB</td><td>48 ms</td></tr>
+      <tr><td>GOAT</td><td>71.7</td><td>27 s</td><td>58 MB</td><td class="best">&lt;1 ms</td></tr>
+      <tr><td>ConceptGraphs</td><td>70.3</td><td>2,160 s</td><td>7 MB</td><td>&lt;10 ms</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tnote"><b>Reading storage fairly:</b> the column is each method's <em>own built artifact</em>;
+    the raw RGB-D keyframes every method ingests at build time are excluded from all rows. JIT's
+    1.0&nbsp;MB index is the smallest artifact here (7×–490× under the eager maps). JIT alone
+    <em>retains</em> those shared keyframes (~375&nbsp;MB) to detect at query time; the eager maps fuse
+    the frames into their map and discard them, a deliberate storage-for-compute trade that buys the
+    seconds-not-hours build.</p>
+
+  <!-- Ranked recall table -->
+  <h3 style="margin:40px 0 4px;font-size:20px">Ranked output: a correct location in the top-k</h3>
+  <p class="sub" style="color:var(--muted);margin:0 0 16px">ScanNet · R@k (oracle upper bound over ranked candidates).</p>
+  <div class="tablewrap"><table class="data">
+    <thead><tr><th>Method</th><th>R@1</th><th>R@3</th><th>R@5</th></tr></thead>
+    <tbody>
+      <tr class="ours"><td>JIT (+L3)</td><td class="best">81.3</td><td class="best">86.7</td><td class="best">87.7</td></tr>
+      <tr class="ours"><td>JIT (L1+L2)</td><td>79.1</td><td>83.9</td><td>84.2</td></tr>
+      <tr><td>Random-100 (single-best)</td><td>80.0</td><td>80.0</td><td class="muted">80.0</td></tr>
+      <tr><td>Random-100 + DBSCAN</td><td>74.2</td><td>80.5</td><td>80.8</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<!-- ===== qualitative ===== -->
+<section id="qualitative"><div class="wrap">
+  <div class="eyebrow">Qualitative</div>
+  <h2 class="title">Query → retrieved frames → 3D location</h2>
+  <p class="lead">Successes and failure modes: the retrieved keyframes, the detection, and the projected 3D hypothesis.</p>
+  <figure class="bordered"><img src="static/images/qualitative.png" alt="Qualitative examples: query, top-4 retrieved frames, 3D localization, and OWL-ViT detection, for success and failure cases."></figure>
+</div></section>
+
+<!-- ===== bibtex ===== -->
+<section id="bibtex"><div class="wrap narrow">
+  <div class="eyebrow">Cite</div>
+  <h2 class="title">BibTeX</h2>
+  <div class="bibtex">
+    <button class="copy" id="copyBib">Copy</button>
+    <pre id="bibblock">@unpublished{jit_episodic_memory,
+  title  = {Spatially-Grounded Just-in-Time Episodic Memory for Mobile Robots},
+  author = {Shyngyskhan Abilkassov and Almas Shintemirov},
+  year   = {2026},
+  note   = {Under review}
+}</pre>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <p>Nazarbayev University · <a href="https://github.com/kurshakuz/jit-episodic-memory" target="_blank" rel="noopener">Code</a>
+     · <a href="static/jit_paper.pdf" target="_blank" rel="noopener">Paper</a></p>
+  <p style="opacity:.7;font-size:13px;margin-top:10px">Page design inspired by the
+    <a href="https://nerfies.github.io" target="_blank" rel="noopener">Nerfies</a> /
+    Academic Project Page template (CC BY-SA 4.0).</p>
+</div></footer>
+
+<script src="static/js/chart.min.js"></script>
+<script src="static/js/app.js"></script>
+</body>
+</html>
